@@ -82,7 +82,7 @@ app.post("/api/pallet", function (req, res) {
 
             var rows = [];
 
-            tableRows.each((i, el) => {
+            tableRows.each(function (i, el) {
                 var row = {};
                 $(el)
                     .find("td")
