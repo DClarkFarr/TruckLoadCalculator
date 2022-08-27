@@ -112,6 +112,7 @@ app.post("/api/pallet", function (req, res) {
         })
         .catch(function (err) {
             console.error(err);
+            res.status(400).json({ message: "caught error: ".err.message });
         });
 });
 
