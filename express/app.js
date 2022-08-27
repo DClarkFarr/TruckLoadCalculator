@@ -74,7 +74,7 @@ app.post("/api/pallet", function (req, res) {
             var keys = [];
             var keysMap = {};
 
-            header.find("td").each((i, el) => {
+            header.find("td").each(function (i, el) {
                 labels.push($(el).text());
                 keys.push(toSlug($(el).text()));
                 keysMap[toSlug($(el).text())] = i;
@@ -86,7 +86,7 @@ app.post("/api/pallet", function (req, res) {
                 var row = {};
                 $(el)
                     .find("td")
-                    .each((i, el) => {
+                    .each(function (i, el) {
                         row[keys[i]] = dimensionsToInches($(el).text());
                     })
                     .get();
@@ -99,7 +99,9 @@ app.post("/api/pallet", function (req, res) {
                 rows,
             });
         })
-        .catch((err) => console.error(err));
+        .catch(function (err) {
+            console.error(err);
+        });
 });
 
 app.use(express.static(path.join(__dirname, "../", "dist")));
