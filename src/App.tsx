@@ -13,6 +13,7 @@ type PalletRow = {
         count: number;
     }[];
     ftSq: number;
+    message: string;
 };
 
 type PalletDataRow = {
@@ -27,7 +28,7 @@ type PalletDataResponse = {
 };
 
 const httpClient = axios.create({
-    baseURL: "http://localhost:3123/api/",
+    baseURL: `${import.meta.env.VITE_APP_DOMAIN}/api/`,
 });
 
 const calculateFtSq = (palletData: PalletDataRow[]) => {
@@ -40,6 +41,10 @@ const calculateFtSq = (palletData: PalletDataRow[]) => {
 function App() {
     const [pallets, setPallets] = useState<PalletRow[]>([]);
     const [loginPrompt, setLoginPrompt] = useState(true);
+
+    const loadedPallets = useMemo(() => {
+        return pallets.filter((pallet) => !pallet.loading).length;
+    }, [pallets]);
 
     const totalSqFt = useMemo(() => {
         return pallets.reduce((acc, cur) => {
@@ -106,6 +111,7 @@ function App() {
             loading: true,
             palletId,
             ftSq: 0,
+            message: "",
         });
 
         httpClient
@@ -123,6 +129,12 @@ function App() {
                     ),
                     ftSq,
                     loading: false,
+                });
+            })
+            .catch((err) => {
+                updatePallet(palletId, {
+                    loading: false,
+                    message: err.data?.message || err.message,
                 });
             });
     };
@@ -167,12 +179,21 @@ function App() {
                                 <button>&times;</button>
                             </div>
                             <div className="pallet-id">{p.palletId}</div>
-                            {p.loading ? (
+                            {p.loading && (
                                 <div className="pallet-loading">Loading...</div>
-                            ) : (
-                                <div className="pallet-data">
-                                    {p.ftSq}ft<sup>2</sup>
-                                </div>
+                            )}
+                            {!p.loading && (
+                                <>
+                                    {p.message ? (
+                                        <div className="pallet-message">
+                                            {p.message}
+                                        </div>
+                                    ) : (
+                                        <div className="pallet-data">
+                                            {p.ftSq}ft<sup>2</sup>
+                                        </div>
+                                    )}
+                                </>
                             )}
                         </div>
                     ))}
@@ -196,7 +217,7 @@ function App() {
                 </form>
             </div>
             <div className="results">
-                {pallets.length === 0 && loginPrompt && (
+                {loadedPallets === 0 && loginPrompt && (
                     <div className="prompt">
                         <h3>Did you login yet?</h3>
                         <p>
@@ -218,13 +239,13 @@ function App() {
                         </button>
                     </div>
                 )}
-                {pallets.length === 0 && !loginPrompt && (
+                {loadedPallets === 0 && !loginPrompt && (
                     <div className="prompt">
                         <h3>Get Started</h3>
                         <p>Add a pallet ID to get started</p>
                     </div>
                 )}
-                {pallets.length > 0 && (
+                {loadedPallets > 0 && (
                     <>
                         <table
                             className="table"
@@ -233,10 +254,6 @@ function App() {
                         >
                             <tbody>
                                 {pallets.map((p, i) => {
-                                    if (!p.palletData) {
-                                        return null;
-                                    }
-
                                     return (
                                         <>
                                             <tr
@@ -249,28 +266,40 @@ function App() {
                                                     {p.palletId}
                                                 </th>
                                             </tr>
-                                            {p.palletData.map((row, j) => (
-                                                <>
-                                                    <tr
-                                                        data-key={`phead-${p.palletId}-${i}-${j}`}
-                                                        key={`phead-${p.palletId}-${i}-${j}`}
-                                                    >
-                                                        <th>Height</th>
-                                                        <th>Length</th>
-                                                        <th>Width</th>
-                                                        <th>Count</th>
-                                                    </tr>
-                                                    <tr
-                                                        data-key={`pval-${p.palletId}-${i}-${j}`}
-                                                        key={`pval-${p.palletId}-${i}-${j}`}
-                                                    >
-                                                        <td>{row.height}</td>
-                                                        <td>{row.length}</td>
-                                                        <td>{row.width}</td>
-                                                        <td>{row.count}</td>
-                                                    </tr>
-                                                </>
-                                            ))}
+                                            {!p.palletData && (
+                                                <tr>
+                                                    <td colSpan={4}>
+                                                        {p.message}
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            {p.palletData &&
+                                                p.palletData.map((row, j) => (
+                                                    <>
+                                                        <tr
+                                                            data-key={`phead-${p.palletId}-${i}-${j}`}
+                                                            key={`phead-${p.palletId}-${i}-${j}`}
+                                                        >
+                                                            <th>Height</th>
+                                                            <th>Length</th>
+                                                            <th>Width</th>
+                                                            <th>Count</th>
+                                                        </tr>
+                                                        <tr
+                                                            data-key={`pval-${p.palletId}-${i}-${j}`}
+                                                            key={`pval-${p.palletId}-${i}-${j}`}
+                                                        >
+                                                            <td>
+                                                                {row.height}
+                                                            </td>
+                                                            <td>
+                                                                {row.length}
+                                                            </td>
+                                                            <td>{row.width}</td>
+                                                            <td>{row.count}</td>
+                                                        </tr>
+                                                    </>
+                                                ))}
                                             <tr
                                                 className="tr-bottom"
                                                 data-key={`pb-${p.palletId}-${i}`}
