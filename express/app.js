@@ -62,12 +62,16 @@ function dimensionsToInches(str) {
 
 app.post("/api/pallet", function (req, res) {
     var { palletId } = req.body;
-
+    console.log("querying pallet: " + palletId);
     axios
         .get(
-            `https://www.liquidation.com/auction/container?id=${palletId}&_cmd=view&_table=pallet`
+            `https://www.liquidation.com/auction/container?id=${palletId}&_cmd=view&_table=pallet`,
+            {
+                timeout: 10000,
+            }
         )
         .then(function (doc) {
+            console.log("parsing doc");
             var $ = cheerio.load(doc.data);
             var table = $("table.data");
             var header = table.find("tr.header");
