@@ -1,11 +1,14 @@
-require("dotenv").config();
-var axios = require("axios");
-var cheerio = require("cheerio");
-var express = require("express");
-var cors = require("cors");
-var bodyParser = require("body-parser");
-var _ = require("lodash");
-var path = require("path");
+import "dotenv/config";
+import axios from "axios";
+import cheerio from "cheerio";
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 var port = process.env.PORT || 4000;
 

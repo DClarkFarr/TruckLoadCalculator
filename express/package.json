@@ -7,7 +7,7 @@
         "start": "node app.js ",
         "dev": "nodemon app.js"
     },
-    "type": "commonjs",
+    "type": "module",
     "keywords": [],
     "author": "",
     "license": "ISC",
@@ -17,6 +17,7 @@
         "cheerio": "^1.0.0-rc.10",
         "cors": "^2.8.5",
         "dotenv": "^10.0.0",
+        "esm": "^3.2.25",
         "express": "^4.17.1",
         "lodash": "^4.17.21",
         "request": "^2.88.2"
