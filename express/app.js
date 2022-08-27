@@ -67,10 +67,11 @@ app.post("/api/pallet", function (req, res) {
         .get(
             `https://www.liquidation.com/auction/container?id=${palletId}&_cmd=view&_table=pallet`,
             {
-                timeout: 10000,
+                timeout: 5000,
                 headers: {
                     "User-Agent":
-                        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/104.0.0.0 Safari/537.36",
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+                    Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
                 },
             }
         )
