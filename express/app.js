@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 var bodyParser = require("body-parser");
 const _ = require("lodash");
+const path = require("path");
 
 const port = process.env.PORT || 4000;
 
@@ -100,6 +101,8 @@ app.post("/api/pallet", (req, res) => {
         })
         .catch((err) => console.error(err));
 });
+
+app.use(express.static(path.join(__dirname, "../", "dist")));
 
 //Listen to server
 app.listen(port, () => {
