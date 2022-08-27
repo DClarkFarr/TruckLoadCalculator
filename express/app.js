@@ -1,15 +1,15 @@
 require("dotenv").config();
-const axios = require("axios");
-const cheerio = require("cheerio");
-const express = require("express");
-const cors = require("cors");
+var axios = require("axios");
+var cheerio = require("cheerio");
+var express = require("express");
+var cors = require("cors");
 var bodyParser = require("body-parser");
-const _ = require("lodash");
-const path = require("path");
+var _ = require("lodash");
+var path = require("path");
 
-const port = process.env.PORT || 4000;
+var port = process.env.PORT || 4000;
 
-const app = express();
+var app = express();
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -38,8 +38,8 @@ function dimensionsToInches(str) {
     let feet = 0;
     let inch = 0;
     let match;
-    const feetRegex = /(\d+)'/;
-    const inchRegex = /(\d+)"/;
+    var feetRegex = /(\d+)'/;
+    var inchRegex = /(\d+)"/;
 
     if ((match = str.match(feetRegex))) {
         feet = parseInt(match[1]);
@@ -57,22 +57,22 @@ function dimensionsToInches(str) {
     return parseInt(str.replace(/[^\d]+/g, ""));
 }
 
-app.post("/api/pallet", (req, res) => {
-    const { palletId } = req.body;
+app.post("/api/pallet", function (req, res) {
+    var { palletId } = req.body;
 
     axios
         .get(
             `https://www.liquidation.com/auction/container?id=${palletId}&_cmd=view&_table=pallet`
         )
-        .then((doc) => {
-            const $ = cheerio.load(doc.data);
-            const table = $("table.data");
-            const header = table.find("tr.header");
-            const tableRows = table.find("tr:not(.header)");
+        .then(function (doc) {
+            var $ = cheerio.load(doc.data);
+            var table = $("table.data");
+            var header = table.find("tr.header");
+            var tableRows = table.find("tr:not(.header)");
 
-            const labels = [];
-            const keys = [];
-            const keysMap = {};
+            var labels = [];
+            var keys = [];
+            var keysMap = {};
 
             header.find("td").each((i, el) => {
                 labels.push($(el).text());
@@ -80,10 +80,10 @@ app.post("/api/pallet", (req, res) => {
                 keysMap[toSlug($(el).text())] = i;
             });
 
-            const rows = [];
+            var rows = [];
 
             tableRows.each((i, el) => {
-                const row = {};
+                var row = {};
                 $(el)
                     .find("td")
                     .each((i, el) => {
@@ -105,6 +105,6 @@ app.post("/api/pallet", (req, res) => {
 app.use(express.static(path.join(__dirname, "../", "dist")));
 
 //Listen to server
-app.listen(port, () => {
+app.listen(port, function () {
     console.log(`Server Established and  running on Port ⚡${port}`);
 });

@@ -1,7 +1,7 @@
 {
-    "name": "nodescraping",
-    "version": "1.0.0",
-    "description": "",
+    "name": "nodescrapingexpress",
+    "version": "1.0.1",
+    "description": "A fun little scraper",
     "main": "app.js",
     "scripts": {
         "start": "node app.js ",
