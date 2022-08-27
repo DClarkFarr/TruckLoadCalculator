@@ -28,7 +28,7 @@ type PalletDataResponse = {
 };
 
 const httpClient = axios.create({
-    baseURL: `${import.meta.env.VITE_APP_DOMAIN}/api/`,
+    baseURL: `${import.meta.env.VITE_APP_DOMAIN}api/`,
 });
 
 const calculateFtSq = (palletData: PalletDataRow[]) => {
